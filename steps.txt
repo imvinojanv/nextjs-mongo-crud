@@ -1,0 +1,7 @@
+### Setup
+-   Install the Next application with JavaScript
+-   Install mongoose (`npm i mongoose`)
+-   Created Navbar component
+-   Create new topic page created
+-   Edit topic page created
+-   Created .env file
