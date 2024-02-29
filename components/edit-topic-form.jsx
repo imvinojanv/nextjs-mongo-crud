@@ -3,35 +3,30 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-const CreateTopic = () => {
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
+const EditTopicForm = ({ id, title, description }) => {
+    const [newTitle, setNewTitle] = useState(title);
+    const [newDescription, setNewDescription] = useState(description);
 
     const router = useRouter();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!title || !description) {
-            alert("Title and description are required.");
-            return;
-        }
-
         try {
-            const res = await fetch("http://localhost:3000/api/topics", {
-                method: "POST",
+            const res = await fetch(`http://localhost:3000/api/topics/${id}`, {
+                method: "PUT",
                 headers: {
                     "Content-type": "application/json",
                 },
-                body: JSON.stringify({ title, description }),
+                body: JSON.stringify({ newTitle, newDescription }),
             });
 
-            if (res.ok) {
-                router.push("/");
-                router.refresh();
-            } else {
-                throw new Error("Failed to create a topic");
+            if (!res.ok) {
+                throw new Error("Failed to update topic");
             }
+            
+            router.push("/");
+            router.refresh();
         } catch (error) {
             console.log(error);
         }
@@ -40,16 +35,16 @@ const CreateTopic = () => {
     return (
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 bg-slate-100 p-6 rounded-md border">
             <input
-                onChange={(e) => setTitle(e.target.value)}
-                value={title}
+                onChange={(e) => setNewTitle(e.target.value)}
+                value={newTitle}
                 className="border border-slate-500 px-8 py-2"
                 type="text"
                 placeholder="Topic Title"
             />
 
             <input
-                onChange={(e) => setDescription(e.target.value)}
-                value={description}
+                onChange={(e) => setNewDescription(e.target.value)}
+                value={newDescription}
                 className="border border-slate-500 px-8 py-2"
                 type="text"
                 placeholder="Topic Description"
@@ -59,10 +54,10 @@ const CreateTopic = () => {
                 type="submit"
                 className="bg-green-600 font-bold text-white mt-4 py-3 px-6 w-fit rounded-lg"
             >
-                Create Topic
+                Update Topic
             </button>
         </form>
     )
 }
 
-export default CreateTopic
+export default EditTopicForm

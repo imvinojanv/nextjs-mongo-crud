@@ -1,7 +1,19 @@
 ### Setup
 -   Install the Next application with JavaScript
 -   Install mongoose (`npm i mongoose`)
+
+### FE
 -   Created Navbar component
 -   Create new topic page created
 -   Edit topic page created
 -   Created .env file
+-   Create all ui components (DeleteButton ...)
+
+### BE
+-   Create a new database on MongoDB Atlas (time 20.00)
+-   Create a new env variable for MONGODB_URI and put the connection string 
+-   Write all api routes for GET, POST, PUT, DELETE
+
+
+
+YT Tutorial : https://www.youtube.com/watch?v=wNWyMsrpbz0&t=68s

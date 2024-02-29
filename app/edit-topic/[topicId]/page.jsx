@@ -1,67 +1,27 @@
-"use client";
+import EditTopicForm from "@/components/edit-topic-form";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+const getTopicById = async (id) => {
+    try {
+        const res = await fetch(`http://localhost:3000/api/topics/${id}`, {
+            cache: "no-store",
+        });
 
-const EditTopic = () => {
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
-
-    const router = useRouter();
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        if (!title || !description) {
-            alert("Title and description are required.");
-            return;
+        if (!res.ok) {
+            throw new Error("Failed to fetch topic");
         }
 
-        try {
-            const res = await fetch("http://localhost:3000/api/topics", {
-                method: "POST",
-                headers: {
-                    "Content-type": "application/json",
-                },
-                body: JSON.stringify({ title, description }),
-            });
+        return res.json();
+    } catch (error) {
+        console.log(error);
+    }
+};
 
-            if (res.ok) {
-                router.push("/");
-            } else {
-                throw new Error("Failed to create a topic");
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    };
+const EditTopic = async ({ params }) => {
+    const { topicId } = params;
+    const { topic } = await getTopicById(topicId);
+    const { title, description } = topic;
 
-    return (
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4 bg-slate-100 p-6 rounded-md border">
-            <input
-                onChange={(e) => setTitle(e.target.value)}
-                value={title}
-                className="border border-slate-500 px-8 py-2"
-                type="text"
-                placeholder="Topic Title"
-            />
-
-            <input
-                onChange={(e) => setDescription(e.target.value)}
-                value={description}
-                className="border border-slate-500 px-8 py-2"
-                type="text"
-                placeholder="Topic Description"
-            />
-
-            <button
-                type="submit"
-                className="bg-green-600 font-bold text-white mt-4 py-3 px-6 w-fit rounded-lg"
-            >
-                Create Topic
-            </button>
-        </form>
-    )
+    return <EditTopicForm id={topicId} title={title} description={description} />;
 }
 
 export default EditTopic
